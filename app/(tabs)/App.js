@@ -9,6 +9,7 @@ import IconButton from '../../components/IconButton';
 import EmojiPicker from "../../components/EmojiPicker";
 import EmojiList from '../../components/EmojiList';
 import EmojiSticker from '../../components/EmojiSticker';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 const PlaceholderImage = require('../../assets/images/1.jpg');
 
 const styles = StyleSheet.create({
@@ -19,7 +20,13 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     paddingTop: 58,
+  },
+  imageWrapper: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   image: {
     width: 320,
@@ -77,41 +84,40 @@ export default function App() {
   };
 
   return (
-    <View style={styles.container}>
-
     <GestureHandlerRootView style={styles.container}>
-      {/* ...rest of the code remains */}
-    </GestureHandlerRootView>
+      <View style={styles.container}>
+        <EmojiPicker isVisible={isModalVisible} onClose={onModalClose}>
+          <EmojiList onSelect={setPickedEmoji} onCloseModal={onModalClose} />
+        </EmojiPicker>
 
-      <EmojiPicker isVisible={isModalVisible} onClose={onModalClose}>
-        <EmojiList onSelect={setPickedEmoji} onCloseModal={onModalClose} />
-      </EmojiPicker>
-
-      <View style={styles.imageContainer}>
-        <ImageViewer
-          placeholderImageSource={PlaceholderImage}
-          selectedImage={selectedImage}
-        />
-        {pickedEmoji && <EmojiSticker imageSize={40} stickerSource={pickedEmoji} />}
-      </View>
-
-      {showAppOptions ? (
-        <View style={styles.optionsContainer}>
-          <View style={styles.optionsRow}>
-            <IconButton icon="refresh" label="Reset" onPress={onReset} />
-            <CircleButton onPress={onAddSticker} />
-            <IconButton icon="save-alt" label="Save" onPress={onSaveImageAsync} />
+        <View style={styles.imageContainer}>
+          <View style={styles.imageWrapper}>
+            <ImageViewer
+              placeholderImageSource={PlaceholderImage}
+              selectedImage={selectedImage}
+              style={styles.image}
+            />
+            {pickedEmoji && <EmojiSticker imageSize={40} stickerSource={pickedEmoji} />}
           </View>
         </View>
-      ) : (
-        <View style={styles.footerContainer}>
-          <Button theme="primary" label="Choose a photo" onPress={pickImageAsync} />
-          <Button label="Use this photo" onPress={() => setShowAppOptions(true)} />
-        </View>
-      )}
 
-      <StatusBar style="auto" />
-    </View>
+        {showAppOptions ? (
+          <View style={styles.optionsContainer}>
+            <View style={styles.optionsRow}>
+              <IconButton icon="refresh" label="Reset" onPress={onReset} />
+              <CircleButton onPress={onAddSticker} />
+              <IconButton icon="save-alt" label="Save" onPress={onSaveImageAsync} />
+            </View>
+          </View>
+        ) : (
+          <View style={styles.footerContainer}>
+            <Button theme="primary" label="Choose a photo" onPress={pickImageAsync} />
+            <Button label="Use this photo" onPress={() => setShowAppOptions(true)} />
+          </View>
+        )}
+
+        <StatusBar style="auto" />
+      </View>
+    </GestureHandlerRootView>
   );
 }
-
